@@ -202,7 +202,8 @@ const MENU={
 {id:107,emoji:"🐟",name:"红烧鱼",desc:"酱香浓郁，肉质鲜嫩",tag:"hot"},
 {id:39,emoji:"🍋",name:"泰式柠檬酸辣鱼",desc:"东南亚风味，酸辣鲜香",tag:"new"},{id:40,emoji:"🦐",name:"香菇包虾滑",desc:"Q弹虾滑配鲜香菇",tag:""},{id:41,emoji:"🦐",name:"蒜香开背虾",desc:"蒜香四溢，虾肉弹牙",tag:""},
 {id:108,emoji:"🦐",name:"油焖大虾",desc:"鲜香弹牙，入口即化",tag:""},
-{id:42,emoji:"🐙",name:"特色鱿鱼",desc:"鲜香弹牙，特色调味",tag:"special"},{id:43,emoji:"🐟",name:"香煎三文鱼",desc:"外酥内嫩，营养丰富",tag:""},{id:44,emoji:"🦪",name:"辣炒花甲",desc:"花甲鲜美，辣味十足",tag:""},{id:45,emoji:"🦀",name:"香辣青蟹",desc:"肥美青蟹，香辣入味",tag:""},{id:46,emoji:"🦀",name:"泰式酸辣螃蟹",desc:"酸辣鲜甜，异域风味",tag:"new"},{id:47,emoji:"🦞",name:"三葱爆龙虾",desc:"葱香浓郁，龙虾鲜甜",tag:"special"},{id:48,emoji:"🦪",name:"炒蛏子",desc:"鲜嫩蛏子，简单美味",tag:""},{id:49,emoji:"🦪",name:"蒸生蚝",desc:"蒜蓉粉丝，鲜到爆",tag:""},
+{id:42,emoji:"🐙",name:"特色鱿鱼",desc:"鲜香弹牙，特色调味",tag:"special"},{id:43,emoji:"🐟",name:"香煎三文鱼",desc:"外酥内嫩，营养丰富",tag:""},{id:44,emoji:"🦪",name:"辣炒花甲",desc:"花甲鲜美，辣味十足",tag:""},
+{id:123,emoji:"🦪",name:"炒花甲",desc:"原味爆炒，鲜嫩多汁",tag:""},{id:45,emoji:"🦀",name:"香辣青蟹",desc:"肥美青蟹，香辣入味",tag:""},{id:46,emoji:"🦀",name:"泰式酸辣螃蟹",desc:"酸辣鲜甜，异域风味",tag:"new"},{id:47,emoji:"🦞",name:"三葱爆龙虾",desc:"葱香浓郁，龙虾鲜甜",tag:"special"},{id:48,emoji:"🦪",name:"炒蛏子",desc:"鲜嫩蛏子，简单美味",tag:""},{id:49,emoji:"🦪",name:"蒸生蚝",desc:"蒜蓉粉丝，鲜到爆",tag:""},
 {id:79,emoji:"🦐",name:"蒜蓉粉丝虾",desc:"蒜蓉粉丝配鲜虾，鲜到爆",tag:"new"},{id:84,emoji:"🦐",name:"椒盐大虾",desc:"外酥里嫩，椒盐飘香",tag:"hot"},{id:85,emoji:"🍋",name:"柠檬酸辣虾",desc:"酸辣清新，虾肉弹牙",tag:"new"},
 {id:118,emoji:"🦐",name:"芥末虾球",desc:"芥末冲鼻，虾球Q弹",tag:"special"},
 {id:120,emoji:"🦐",name:"烤虾滑",desc:"外焦里嫩，鲜香弹牙",tag:"new"},
@@ -213,7 +214,6 @@ const MENU={
 "🥚 蛋类":[
 {id:50,emoji:"🍳",name:"煎蛋",desc:"金黄酥脆，简单美味",tag:""},{id:51,emoji:"🥚",name:"水煮蛋",desc:"营养满分的白煮蛋",tag:""},{id:52,emoji:"🥚",name:"卤蛋",desc:"仅红烧锅底可加",tag:""},{id:53,emoji:"🥚",name:"酸辣鸡蛋",desc:"酸辣开胃，蛋香浓郁",tag:""},{id:54,emoji:"🥚",name:"韭黄炒蛋",desc:"韭黄鲜嫩，蛋香四溢",tag:""},{id:55,emoji:"🍅",name:"西红柿炒鸡蛋",desc:"永远的经典，酸甜下饭",tag:""},
 {id:83,emoji:"🍳",name:"火腿炒蛋",desc:"火腿鲜香配嫩滑鸡蛋",tag:""},
-{id:109,emoji:"🍳",name:"番茄炒蛋",desc:"经典家常，酸甜开胃",tag:""},
 ],
 "🥬 蔬菜·凉菜":[
 {id:56,emoji:"🥬",name:"清炒上海青",desc:"清爽嫩滑，简单好吃",tag:""},{id:57,emoji:"🍄",name:"香菇炒青菜",desc:"鲜香嫩滑，家常美味",tag:""},{id:58,emoji:"🥬",name:"蚝油生菜",desc:"蚝油鲜香，生菜脆嫩",tag:""},
@@ -257,7 +257,7 @@ function openOptions(item){currentOptItem=item;currentOptSelections={};item.opti
 function renderOptionsBody(){let h='';currentOptItem.options.forEach(o=>{h+=`<div class="opt-group"><div class="opt-label">${o.label}</div>`;if(!o.onlyOther){h+='<div class="opt-chips">';o.choices.forEach(c=>{const sel=o.multi?currentOptSelections[o.key].includes(c):currentOptSelections[o.key]===c;h+=`<button class="opt-chip ${sel?'selected':''}" onclick="toggleOpt('${o.key}',\`${c}\`,${o.multi})">${c}</button>`;});h+='</div>';}if(o.hasOther||o.onlyOther)h+=`<textarea class="opt-remark" placeholder="${o.onlyOther?'写下你想吃的...':'其他（文字备注）'}" oninput="currentOptSelections['${o.key}_other']=this.value">${currentOptSelections[o.key+'_other']||''}</textarea>`;h+='</div>';});document.getElementById('optBody').innerHTML=h;}
 function toggleOpt(key,val,multi){if(multi){const a=currentOptSelections[key],i=a.indexOf(val);if(i>=0)a.splice(i,1);else a.push(val);}else currentOptSelections[key]=currentOptSelections[key]===val?'':val;renderOptionsBody();}
 function confirmOptions(){const item=currentOptItem;let parts=[],opts={};item.options.forEach(o=>{let vals=[];if(o.multi)vals=[...currentOptSelections[o.key]];else if(currentOptSelections[o.key])vals=[currentOptSelections[o.key]];const other=currentOptSelections[o.key+'_other']?.trim();if(other)vals.push(other);if(vals.length){parts.push(o.label.replace(/\(.*?\)/g,'').trim()+'：'+vals.join('、'));opts[o.key]=vals;}});const optionsStr=parts.join(' | ');const ex=Object.entries(cart).find(([k,v])=>v.itemId===item.id&&v.optionsStr===optionsStr);if(ex)cart[ex[0]].qty++;else cart['ck_'+(++cartKeyCounter)]={itemId:item.id,qty:1,options:opts,optionsStr};document.getElementById('optOverlay').classList.remove('open');document.getElementById('optPanel').classList.remove('open');if(currentPanel!=='cart'){document.getElementById('panelOverlay').classList.remove('open');currentPanel=null;}else renderCart();currentOptItem=null;renderMenu();updateCartBar();}
-function renderCart(){const list=document.getElementById('cartList'),entries=Object.entries(cart);if(!entries.length){list.innerHTML='<div style="text-align:center;padding:40px;color:var(--text-muted);">还没选菜呢～</div>';return;}let h='';for(const[key,val]of entries){const item=findItem(val.itemId);if(!item)continue;h+=`<div class="drawer-item"><div class="drawer-item-emoji">${item.emoji}</div><div class="drawer-item-info"><div class="drawer-item-name">${item.name}</div>${val.optionsStr?`<div class="drawer-item-opts">${val.optionsStr}</div>`:''}<div class="drawer-item-price">老大免费 × ${val.qty}</div></div><div class="qty-control"><button class="qty-btn qty-minus" onclick="cartQty('${key}',-1)">−</button><span class="qty-num">${val.qty}</span><button class="qty-btn qty-plus" onclick="cartQty('${key}',1)">+</button></div></div>`;}list.innerHTML=h;}
+function renderCart(){const list=document.getElementById('cartList'),entries=Object.entries(cart);if(!entries.length){list.innerHTML='<div style="text-align:center;padding:40px;color:var(--text-muted);">还没选菜呢～</div>';return;}let h='';for(const[key,val]of entries){if(val.itemId==='remark'){h+=`<div class="drawer-item"><div class="drawer-item-emoji">📝</div><div class="drawer-item-info"><div class="drawer-item-name">备注</div><div class="drawer-item-opts">${val.remarkText}</div></div><div class="qty-control"><button class="qty-btn qty-minus" onclick="cartQty('${key}',-1)">✕</button></div></div>`;continue;}const item=findItem(val.itemId);if(!item)continue;h+=`<div class="drawer-item"><div class="drawer-item-emoji">${item.emoji}</div><div class="drawer-item-info"><div class="drawer-item-name">${item.name}</div>${val.optionsStr?`<div class="drawer-item-opts">${val.optionsStr}</div>`:''}<div class="drawer-item-price">老大免费 × ${val.qty}</div></div><div class="qty-control"><button class="qty-btn qty-minus" onclick="cartQty('${key}',-1)">−</button><span class="qty-num">${val.qty}</span><button class="qty-btn qty-plus" onclick="cartQty('${key}',1)">+</button></div></div>`;}list.innerHTML=h;}
 function cartQty(key,delta){if(!cart[key])return;cart[key].qty+=delta;if(cart[key].qty<=0)delete cart[key];renderMenu();updateCartBar();if(!Object.keys(cart).length)closePanel();else renderCart();}
 function clearCart(){cart={};cartKeyCounter=0;renderMenu();updateCartBar();closePanel();}
 
@@ -269,6 +269,10 @@ function submitOrder(){
   let totalItems=0;
   let itemsHtml='';
   for(const[key,val]of entries){
+    if(val.itemId==='remark'){
+      itemsHtml+=`<div class="order-item-line">📝 备注</div><div class="order-item-opt">└ ${val.remarkText}</div>`;
+      continue;
+    }
     const item=findItem(val.itemId);if(!item)continue;
     totalItems+=val.qty;
     itemsHtml+=`<div class="order-item-line">${item.emoji} ${item.name} ×${val.qty}</div>`;
@@ -293,8 +297,9 @@ function closeOrder(){document.getElementById('orderOverlay').classList.remove('
 // ============================== REMARK ==============================
 function submitRemark(){
   const text=document.getElementById('remarkText').value.trim();if(!text){showNotif('⚠️ 请先写点备注～');return;}
-  showNotif('✅ 备注已记录！记得截图发给大厨～');
-  document.getElementById('remarkText').value='';closePanel();
+  cart['remark_'+(++cartKeyCounter)]={itemId:'remark',qty:1,options:{},optionsStr:text,remarkText:text};
+  document.getElementById('remarkText').value='';closePanel();renderMenu();updateCartBar();
+  showNotif('✅ 备注已加入菜单！');
 }
 
 // ============================== SUGGESTIONS ==============================
