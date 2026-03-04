@@ -121,7 +121,7 @@ body{font-family:'Noto Sans SC',sans-serif;background:var(--bg);color:var(--text
   <div class="header-top">
     <div>
       <h1>🍽 胡老大专用点菜</h1>
-      <div class="header-sub">想吃啥点啥，老大免费！其他人一百万 💰</div>
+      <div class="header-sub" id="headerSub">想吃啥点啥，老大免费！其他人一百万 💰</div>
     </div>
     <div class="header-emoji">👨‍🍳</div>
   </div>
@@ -168,6 +168,7 @@ const MENU={
 "🍚 米饭主食":[
 {id:10,emoji:"🍚",name:"米饭",desc:"选择你的饭量",tag:"",options:[{label:"饭量",key:"portion",multi:false,choices:["饥饿","适中","饱腹"],hasOther:true}]},
 {id:11,emoji:"🍙",name:"招牌温州糯米饭",desc:"糯香扑鼻，温州特色！",tag:"special"},
+{id:119,emoji:"🫓",name:"特色酱香饼",desc:"酱香浓郁，外酥里软",tag:"special"},
 ],
 "🥟 饺子·汤包·粽子":[
 {id:12,emoji:"🥟",name:"饺子",desc:"手工现包，馅料十足",tag:"hot",options:[{label:"选馅料",key:"filling",multi:false,choices:["三鲜","猪肉大葱","什锦（特色！虾滑+猪肉）"],hasOther:true},{label:"做法",key:"method",multi:false,choices:["水饺","蒸饺","煎饺"],hasOther:false}]},
@@ -203,6 +204,7 @@ const MENU={
 {id:42,emoji:"🐙",name:"特色鱿鱼",desc:"鲜香弹牙，特色调味",tag:"special"},{id:43,emoji:"🐟",name:"香煎三文鱼",desc:"外酥内嫩，营养丰富",tag:""},{id:44,emoji:"🦪",name:"辣炒花甲",desc:"花甲鲜美，辣味十足",tag:""},{id:45,emoji:"🦀",name:"香辣青蟹",desc:"肥美青蟹，香辣入味",tag:""},{id:46,emoji:"🦀",name:"泰式酸辣螃蟹",desc:"酸辣鲜甜，异域风味",tag:"new"},{id:47,emoji:"🦞",name:"三葱爆龙虾",desc:"葱香浓郁，龙虾鲜甜",tag:"special"},{id:48,emoji:"🦪",name:"炒蛏子",desc:"鲜嫩蛏子，简单美味",tag:""},{id:49,emoji:"🦪",name:"蒸生蚝",desc:"蒜蓉粉丝，鲜到爆",tag:""},
 {id:79,emoji:"🦐",name:"蒜蓉粉丝虾",desc:"蒜蓉粉丝配鲜虾，鲜到爆",tag:"new"},{id:84,emoji:"🦐",name:"椒盐大虾",desc:"外酥里嫩，椒盐飘香",tag:"hot"},{id:85,emoji:"🍋",name:"柠檬酸辣虾",desc:"酸辣清新，虾肉弹牙",tag:"new"},
 {id:118,emoji:"🦐",name:"芥末虾球",desc:"芥末冲鼻，虾球Q弹",tag:"special"},
+{id:120,emoji:"🦐",name:"烤虾滑",desc:"外焦里嫩，鲜香弹牙",tag:"new"},
 ],
 "🔥 麻辣香锅":[
 {id:18,emoji:"🔥",name:"麻辣香锅",desc:"无辣不欢，配菜自选",tag:"hot",options:[{label:"选配菜(可多选)",key:"toppings",multi:true,choices:["虾","鱼","牛肉","五花肉","青菜","包菜","金针菇"],hasOther:true}]},
@@ -300,6 +302,9 @@ function removeSuggestion(i){suggestions.splice(i,1);renderSuggestList();}
 function showNotif(msg){const b=document.getElementById('notifBanner');b.textContent=msg;b.classList.add('show');setTimeout(()=>b.classList.remove('show'),2500);}
 
 renderCategories();renderMenu();updateCartBar();
+// Show total dish count
+let totalDishes=0;for(const items of Object.values(MENU))totalDishes+=items.length;
+document.getElementById('headerSub').textContent=`共 ${totalDishes} 道菜任你选，老大免费！其他人一百万 💰`;
 </script>
 </body>
 </html>
