@@ -236,7 +236,8 @@ const MENU={
 ],
 };
 
-let cart={},activeCategory=0,currentOptItem=null,currentOptSelections={},suggestions=[],searchQuery='',cartKeyCounter=0,currentPanel=null;
+let cart={},activeCategory=0,currentOptItem=null,currentOptSelections={},searchQuery='',cartKeyCounter=0,currentPanel=null;
+let suggestions=[];try{suggestions=JSON.parse(localStorage.getItem('hulaoda_suggestions')||'[]');}catch(e){suggestions=[];}
 const categoryNames=Object.keys(MENU);
 
 function renderCategories(){document.getElementById('categories').innerHTML=categoryNames.map((n,i)=>`<button class="cat-tab ${i===activeCategory?'active':''}" onclick="switchCategory(${i})">${n}</button>`).join('');}
@@ -304,8 +305,8 @@ function submitRemark(){
 
 // ============================== SUGGESTIONS ==============================
 function renderSuggestList(){const list=document.getElementById('sugList');if(!suggestions.length){list.innerHTML='<div style="text-align:center;padding:30px;color:var(--text-muted);font-size:13px;">还没有意见～快来第一个提交吧！</div>';return;}list.innerHTML=suggestions.map((s,i)=>`<div class="suggest-item"><div><div class="suggest-item-name">💬 ${s.text}</div><div class="suggest-item-time">${s.time}</div></div><button style="background:none;border:none;font-size:16px;cursor:pointer;color:var(--text-muted);" onclick="removeSuggestion(${i})">✕</button></div>`).join('');}
-function addSuggestion(){const input=document.getElementById('sugInput'),text=input.value.trim();if(!text)return;const now=new Date(),time=`${now.getMonth()+1}月${now.getDate()}日 ${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`;suggestions.unshift({text,time});input.value='';renderSuggestList();}
-function removeSuggestion(i){suggestions.splice(i,1);renderSuggestList();}
+function addSuggestion(){const input=document.getElementById('sugInput'),text=input.value.trim();if(!text)return;const now=new Date(),time=`${now.getMonth()+1}月${now.getDate()}日 ${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`;suggestions.unshift({text,time});input.value='';localStorage.setItem('hulaoda_suggestions',JSON.stringify(suggestions));renderSuggestList();}
+function removeSuggestion(i){suggestions.splice(i,1);localStorage.setItem('hulaoda_suggestions',JSON.stringify(suggestions));renderSuggestList();}
 function showNotif(msg){const b=document.getElementById('notifBanner');b.textContent=msg;b.classList.add('show');setTimeout(()=>b.classList.remove('show'),2500);}
 
 renderCategories();renderMenu();updateCartBar();
