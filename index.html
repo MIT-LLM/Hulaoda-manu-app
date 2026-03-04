@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="胡老大点菜">
+<title>胡老大专用点菜</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#FFF8F0;--card:#FFF;--primary:#FF6B35;--primary-light:#FFF0E8;--primary-dark:#E85A2A;--text:#2D1810;--text-light:#8B7355;--text-muted:#C4A882;--border:#F0E6D8;--badge:#FF3B30;--shadow:0 2px 16px rgba(45,24,16,0.08);--shadow-lg:0 8px 32px rgba(45,24,16,0.12);}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+body{font-family:'Noto Sans SC',sans-serif;background:var(--bg);color:var(--text);max-width:430px;margin:0 auto;min-height:100vh;overflow-x:hidden;}
+.header{position:sticky;top:0;z-index:100;background:linear-gradient(135deg,var(--primary) 0%,#FF8C42 100%);padding:18px 18px 14px;color:#fff;border-radius:0 0 24px 24px;box-shadow:0 4px 20px rgba(255,107,53,0.3);}
+.header-top{display:flex;align-items:center;justify-content:space-between;}
+.header h1{font-family:'ZCOOL KuaiLe',cursive;font-size:21px;}
+.header-sub{font-size:12px;opacity:0.9;margin-top:2px;font-weight:300;}
+.header-emoji{font-size:34px;animation:bounce 2s infinite;}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.hdr-btns{display:flex;gap:6px;margin-top:10px;}
+.hdr-btn{flex:1;background:rgba(255,255,255,0.2);border:1.5px dashed rgba(255,255,255,0.6);color:#fff;border-radius:12px;padding:8px 0;font-size:12px;cursor:pointer;font-family:inherit;transition:all 0.2s;}
+.hdr-btn:active{background:rgba(255,255,255,0.35);}
+.search-bar{padding:10px 16px 4px;}
+.search-input{width:100%;padding:10px 14px 10px 38px;border-radius:14px;border:1.5px solid var(--border);background:var(--card);font-size:14px;font-family:inherit;color:var(--text);outline:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' fill='%23C4A882' viewBox='0 0 24 24'%3E%3Cpath d='M15.5 14h-.79l-.28-.27A6.47 6.47 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:12px center;transition:border 0.2s;}
+.search-input:focus{border-color:var(--primary);}
+.categories{display:flex;gap:7px;padding:10px 16px 4px;overflow-x:auto;scrollbar-width:none;}
+.categories::-webkit-scrollbar{display:none;}
+.cat-tab{flex-shrink:0;padding:6px 13px;border-radius:16px;font-size:12px;font-weight:500;border:none;cursor:pointer;background:var(--card);color:var(--text-light);box-shadow:0 1px 4px rgba(0,0,0,0.04);transition:all 0.25s;white-space:nowrap;}
+.cat-tab.active{background:var(--primary);color:#fff;box-shadow:0 2px 12px rgba(255,107,53,0.35);transform:scale(1.05);}
+.menu-section{padding:4px 16px 130px;}
+.section-title{font-size:12px;color:var(--text-muted);font-weight:500;margin:12px 0 8px 4px;letter-spacing:1px;}
+.menu-item{display:flex;align-items:center;gap:12px;background:var(--card);border-radius:16px;padding:11px;margin-bottom:8px;box-shadow:var(--shadow);animation:fadeUp 0.3s ease both;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.item-img{width:64px;height:64px;border-radius:14px;font-size:32px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#FFF5EE,#FFE8D6);flex-shrink:0;}
+.item-info{flex:1;min-width:0;}
+.item-name{font-size:14px;font-weight:700;margin-bottom:1px;display:flex;align-items:center;gap:4px;flex-wrap:wrap;}
+.item-tag{font-size:9px;padding:1px 5px;border-radius:4px;font-weight:500;}
+.tag-hot{background:#FFF0E0;color:#FF6B35}.tag-new{background:#E8F5E9;color:#4CAF50}.tag-special{background:#FDE8EF;color:#E91E63}.tag-secret{background:#EDE7F6;color:#7C4DFF}.tag-fav{background:#FDE8EF;color:#E91E63}
+.item-desc{font-size:11px;color:var(--text-light);margin-bottom:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.item-bottom{display:flex;align-items:center;justify-content:space-between;}
+.item-price{font-size:11px;font-weight:700;color:var(--primary);line-height:1.3;}
+.item-price .free{font-size:13px;font-weight:900}.item-price .others{font-size:9px;color:var(--text-muted);display:block;}
+.has-options{font-size:10px;color:#FFB347;margin-left:2px;}
+.qty-control{display:flex;align-items:center;}
+.qty-btn{width:28px;height:28px;border-radius:50%;border:none;cursor:pointer;font-size:17px;font-weight:700;display:flex;align-items:center;justify-content:center;transition:all 0.2s;}
+.qty-minus{background:#F5F0EB;color:var(--text-light)}.qty-plus{background:var(--primary);color:#fff;box-shadow:0 2px 8px rgba(255,107,53,0.35);}
+.qty-plus:active{transform:scale(1.15);}
+.qty-num{width:26px;text-align:center;font-size:14px;font-weight:700;}
+.cart-bar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;padding:10px 16px;padding-bottom:max(10px,env(safe-area-inset-bottom));background:rgba(255,248,240,0.88);backdrop-filter:blur(20px);z-index:200;}
+.cart-inner{display:flex;align-items:center;background:var(--text);border-radius:22px;padding:8px 8px 8px 16px;box-shadow:var(--shadow-lg);gap:10px;}
+.cart-icon{position:relative;font-size:24px;flex-shrink:0;}
+.cart-badge{position:absolute;top:-5px;right:-7px;background:var(--badge);color:#fff;font-size:10px;font-weight:700;min-width:18px;height:18px;padding:0 4px;border-radius:9px;display:flex;align-items:center;justify-content:center;}
+.cart-info{flex:1}.cart-total{color:#fff;font-size:14px;font-weight:900}.cart-count{color:rgba(255,255,255,0.6);font-size:11px;}
+.cart-submit{background:var(--primary);color:#fff;border:none;border-radius:18px;padding:10px 20px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;}
+.cart-submit:active{transform:scale(0.95);}
+.cart-empty .cart-inner{opacity:0.5;pointer-events:none;}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:300;opacity:0;pointer-events:none;transition:opacity 0.3s;}
+.overlay.open{opacity:1;pointer-events:all;}
+.panel{position:fixed;bottom:0;left:50%;transform:translateX(-50%) translateY(100%);width:100%;max-width:430px;background:var(--bg);border-radius:24px 24px 0 0;z-index:301;transition:transform 0.4s cubic-bezier(0.4,0,0.2,1);max-height:75vh;display:flex;flex-direction:column;}
+.panel.open{transform:translateX(-50%) translateY(0);}
+.panel-header{display:flex;align-items:center;justify-content:space-between;padding:18px 20px 10px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.panel-title{font-size:16px;font-weight:700}.panel-close{background:none;border:none;font-size:20px;cursor:pointer;color:var(--text-light);padding:4px;}
+.panel-clear{font-size:12px;color:var(--text-light);background:none;border:none;cursor:pointer;font-family:inherit;}
+.panel-body{flex:1;overflow-y:auto;padding:10px 20px;-webkit-overflow-scrolling:touch;}
+.panel-footer{padding:14px 20px;padding-bottom:max(20px,env(safe-area-inset-bottom));flex-shrink:0;}
+.btn-full{width:100%;padding:14px;border-radius:16px;border:none;background:var(--primary);color:#fff;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;}
+.btn-full:active{transform:scale(0.97);}
+.drawer-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);}
+.drawer-item:last-child{border:none;}
+.drawer-item-emoji{font-size:26px}.drawer-item-info{flex:1}.drawer-item-name{font-size:13px;font-weight:600}
+.drawer-item-opts{font-size:10px;color:var(--text-light);margin-top:1px;line-height:1.4}.drawer-item-price{font-size:12px;color:var(--primary);font-weight:700;}
+.opt-group{margin-bottom:14px}.opt-label{font-size:13px;font-weight:600;margin-bottom:8px}
+.opt-chips{display:flex;flex-wrap:wrap;gap:7px}
+.opt-chip{padding:7px 14px;border-radius:20px;font-size:13px;border:1.5px solid var(--border);background:#fff;cursor:pointer;transition:all 0.2s;font-family:inherit;color:var(--text);}
+.opt-chip.selected{border-color:var(--primary);background:var(--primary-light);color:var(--primary);font-weight:600;}
+.opt-remark{width:100%;padding:10px 14px;border-radius:12px;border:1.5px solid var(--border);font-size:13px;font-family:inherit;resize:none;height:42px;outline:none;background:#fff;margin-top:8px;}
+.opt-remark:focus{border-color:var(--primary);}
+.suggest-item{background:#fff;border-radius:12px;padding:12px 14px;margin-bottom:8px;box-shadow:0 1px 4px rgba(0,0,0,0.04);display:flex;justify-content:space-between;align-items:center;}
+.suggest-item-name{font-size:13px;font-weight:600}.suggest-item-time{font-size:10px;color:var(--text-muted);}
+.suggest-input-row{display:flex;gap:8px;padding:14px 20px;padding-bottom:max(20px,env(safe-area-inset-bottom));flex-shrink:0;}
+.suggest-input{flex:1;padding:12px 14px;border-radius:14px;border:1.5px solid var(--border);font-size:14px;font-family:inherit;outline:none;background:#fff;}
+.suggest-input:focus{border-color:var(--primary);}
+.suggest-send{padding:12px 18px;border-radius:14px;border:none;background:var(--primary);color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;}
+.remark-entry textarea{width:100%;border:1.5px solid var(--border);border-radius:10px;padding:10px;font-size:13px;font-family:inherit;resize:none;height:70px;outline:none;background:#FDFAF6;}
+.remark-entry textarea:focus{border-color:var(--primary);}
+.remark-entry .re-label{font-size:13px;font-weight:600;margin-bottom:6px;color:var(--text);}
+.notif-banner{position:fixed;top:0;left:50%;transform:translateX(-50%) translateY(-100%);max-width:430px;width:100%;padding:14px 20px;text-align:center;font-size:14px;font-weight:600;z-index:500;border-radius:0 0 16px 16px;transition:transform 0.4s cubic-bezier(0.4,0,0.2,1);background:#4CAF50;color:#fff;}
+.notif-banner.show{transform:translateX(-50%) translateY(0);}
+/* Order result card */
+.order-result{background:var(--bg);border-radius:20px;padding:24px 20px;text-align:center;width:88%;max-width:360px;margin:0 auto;}
+.order-result-header{font-family:'ZCOOL KuaiLe',cursive;font-size:20px;color:var(--primary);margin-bottom:4px;}
+.order-result-sub{font-size:12px;color:var(--text-muted);margin-bottom:16px;}
+.order-result-list{text-align:left;line-height:2;font-size:13px;margin-bottom:16px;padding:14px;background:#fff;border-radius:14px;}
+.order-result-list .opt-detail{font-size:11px;color:var(--text-light);padding-left:8px;}
+.order-result-tip{font-size:12px;color:var(--text-muted);padding:12px;background:#FFF5EE;border-radius:12px;margin-bottom:16px;line-height:1.6;}
+.order-result-tip b{color:var(--primary);}
+/* Full screen order overlay */
+.order-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:400;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.3s;padding:20px;}
+.order-overlay.open{opacity:1;pointer-events:all;}
+.order-card{background:#fff;border-radius:24px;width:100%;max-width:380px;max-height:85vh;overflow-y:auto;transform:scale(0.8);transition:transform 0.4s cubic-bezier(0.175,0.885,0.32,1.275);padding:28px 22px;}
+.order-overlay.open .order-card{transform:scale(1);}
+.order-emoji{font-size:48px;text-align:center;margin-bottom:8px;}
+.order-title{font-family:'ZCOOL KuaiLe',cursive;font-size:20px;color:var(--primary);text-align:center;margin-bottom:4px;}
+.order-time{font-size:11px;color:var(--text-muted);text-align:center;margin-bottom:14px;}
+.order-items{padding:14px;background:var(--bg);border-radius:14px;margin-bottom:14px;}
+.order-item-line{font-size:13px;line-height:2;font-weight:500;}
+.order-item-opt{font-size:11px;color:var(--text-light);padding-left:10px;line-height:1.8;}
+.order-total{text-align:center;font-size:14px;font-weight:700;color:var(--text);margin-bottom:14px;}
+.order-tip{font-size:12px;color:var(--text-muted);text-align:center;padding:12px;background:#FFF5EE;border-radius:12px;margin-bottom:16px;line-height:1.6;}
+.order-tip b{color:var(--primary);}
+.order-close-btn{width:100%;padding:14px;border-radius:16px;border:none;background:var(--primary);color:#fff;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;}
+.empty-state{text-align:center;padding:50px 20px;color:var(--text-muted);}.empty-state .emoji{font-size:48px;margin-bottom:12px;}
+</style>
+</head>
+<body>
+
+<div class="notif-banner" id="notifBanner"></div>
+
+<div class="header">
+  <div class="header-top">
+    <div>
+      <h1>🍽 胡老大专用点菜</h1>
+      <div class="header-sub">想吃啥点啥，老大免费！其他人一百万 💰</div>
+    </div>
+    <div class="header-emoji">👨‍🍳</div>
+  </div>
+  <div class="hdr-btns">
+    <button class="hdr-btn" onclick="openPanel('suggest')">💡 新菜意见</button>
+    <button class="hdr-btn" onclick="openPanel('remark')">📝 备注通道</button>
+  </div>
+</div>
+
+<div class="search-bar"><input class="search-input" placeholder="搜一搜想吃的菜..." oninput="onSearch(this.value)" id="searchInput"></div>
+<div class="categories" id="categories"></div>
+<div class="menu-section" id="menuSection"></div>
+
+<div class="cart-bar cart-empty" id="cartBar">
+  <div class="cart-inner">
+    <div class="cart-icon">🛒<div class="cart-badge" id="cartBadge" style="display:none">0</div></div>
+    <div class="cart-info"><div class="cart-total" id="cartTotal">老大免费</div><div class="cart-count" id="cartCount">还没选呢～</div></div>
+    <button class="cart-submit" onclick="openPanel('cart')">选好了</button>
+  </div>
+</div>
+
+<div class="overlay" id="panelOverlay" onclick="if(currentOptItem&&currentPanel===null){closeOptOnly();}else{closePanel();}"></div>
+<div class="panel" id="cartPanel"><div class="panel-header"><div class="panel-title">🧾 已选菜品</div><button class="panel-clear" onclick="clearCart()">清空</button></div><div class="panel-body" id="cartList"></div><div class="panel-footer"><button class="btn-full" onclick="submitOrder()">下单！开始做饭 🔥</button></div></div>
+<div class="overlay" id="optOverlay" onclick="closeOptOnly()" style="z-index:301;"></div>
+<div class="panel" id="optPanel" style="z-index:302;"><div class="panel-header"><div class="panel-title" id="optTitle"></div><button class="panel-close" onclick="closeOptOnly()">✕</button></div><div class="panel-body" id="optBody"></div><div class="panel-footer"><button class="btn-full" onclick="confirmOptions()">✅ 加入购物车</button></div></div>
+<div class="panel" id="sugPanel"><div class="panel-header"><div class="panel-title">💡 意见 & 新菜推荐</div><button class="panel-close" onclick="closePanel()">✕</button></div><div class="panel-body" id="sugList"></div><div class="suggest-input-row"><input class="suggest-input" placeholder="想吃什么新菜？告诉大厨..." id="sugInput" maxlength="80"><button class="suggest-send" onclick="addSuggestion()">提交</button></div></div>
+<div class="panel" id="remarkPanel"><div class="panel-header"><div class="panel-title">📝 备注菜品通道</div><button class="panel-close" onclick="closePanel()">✕</button></div><div class="panel-body"><div class="remark-entry"><div class="re-label">菜单上没有的菜？特殊要求？写在这里：</div><textarea id="remarkText" placeholder="例如：想吃糖醋排骨、不要辣、多放葱..."></textarea></div></div><div class="panel-footer"><button class="btn-full" onclick="submitRemark()">📝 提交备注</button></div></div>
+
+<!-- Order Result Overlay -->
+<div class="order-overlay" id="orderOverlay" onclick="if(event.target===this)closeOrder()">
+  <div class="order-card" id="orderCard"></div>
+</div>
+
+<script>
+const MENU={
+"🍜 面食":[
+{id:1,emoji:"🫕",name:"炒年糕",desc:"Q弹年糕，配菜自选",tag:"hot",options:[{label:"选配菜(可多选)",key:"toppings",multi:true,choices:["牛肉","鸡蛋","青菜","里脊","五花肉","香菇","包菜"],hasOther:true}]},
+{id:2,emoji:"🍝",name:"炒面",desc:"面条自选，配菜随心配",tag:"hot",options:[{label:"选面条",key:"noodle",multi:false,choices:["温州细粉干","麦面","方便面","刀削面","土豆粉","红薯粉"],hasOther:true},{label:"选配菜(可多选)",key:"toppings",multi:true,choices:["虾干","牛肉","鸡蛋","里脊","五花肉","包菜","香菇"],hasOther:true}]},
+{id:3,emoji:"🍜",name:"红烧牛肉面",desc:"浓郁牛肉汤底，面条劲道",tag:""},{id:4,emoji:"🍅",name:"番茄牛腩面",desc:"酸甜番茄配软烂牛腩",tag:""},{id:5,emoji:"🐂",name:"牛尾面",desc:"醇厚牛尾汤，鲜到心里",tag:"special"},{id:6,emoji:"🥚",name:"西红柿鸡蛋面",desc:"经典家常味道",tag:""},{id:7,emoji:"🦴",name:"排骨面",desc:"大块排骨，超满足",tag:""},{id:8,emoji:"🥩",name:"肉丝面",desc:"嫩滑肉丝，鲜香可口",tag:""},{id:9,emoji:"🦐",name:"三鲜面",desc:"虾仁鱿鱼肉丝三鲜汇聚",tag:""},
+{id:76,emoji:"🥚",name:"鸡蛋炸酱面",desc:"浓香炸酱配嫩滑鸡蛋",tag:"new"},{id:77,emoji:"🐟",name:"鱼丸面",desc:"Q弹鱼丸，鲜美汤底",tag:"new"},
+{id:100,emoji:"🍝",name:"炸酱面",desc:"酱香浓郁，面条劲道",tag:"fav"},
+{id:101,emoji:"🍜",name:"酸辣粉",desc:"酸辣过瘾，Q弹爽滑",tag:""},
+],
+"🍚 米饭主食":[
+{id:10,emoji:"🍚",name:"米饭",desc:"选择你的饭量",tag:"",options:[{label:"饭量",key:"portion",multi:false,choices:["饥饿","适中","饱腹"],hasOther:true}]},
+{id:11,emoji:"🍙",name:"招牌温州糯米饭",desc:"糯香扑鼻，温州特色！",tag:"special"},
+],
+"🥟 饺子·汤包·粽子":[
+{id:12,emoji:"🥟",name:"饺子",desc:"手工现包，馅料十足",tag:"hot",options:[{label:"选馅料",key:"filling",multi:false,choices:["三鲜","猪肉大葱","什锦（特色！虾滑+猪肉）"],hasOther:true},{label:"做法",key:"method",multi:false,choices:["水饺","蒸饺","煎饺"],hasOther:false}]},
+{id:13,emoji:"🧆",name:"汤包",desc:"皮薄汁多，鲜美无比",tag:""},{id:14,emoji:"🫔",name:"粽子",desc:"端午味道，随时享用",tag:"",options:[{label:"口味",key:"flavor",multi:false,choices:["肉粽","蜜枣"],hasOther:true}]},
+{id:82,emoji:"🥟",name:"新三鲜饺",desc:"酸辣！包菜+西红柿+青辣椒",tag:"special"},
+{id:102,emoji:"🥟",name:"手工水饺",desc:"皮薄馅大，鲜香多汁",tag:"hot"},
+],
+"🥩 牛肉系列":[
+{id:20,emoji:"🥩",name:"牛排",desc:"选你喜欢的熟度",tag:"special",options:[{label:"熟度",key:"doneness",multi:false,choices:["3分熟","5分熟","7分熟","全熟"],hasOther:false}]},
+{id:21,emoji:"🐂",name:"清炖牛肋条",desc:"软烂入味，汤鲜肉嫩",tag:""},{id:22,emoji:"🐂",name:"番茄牛腩",desc:"酸甜番茄炖软烂牛腩",tag:""},{id:23,emoji:"🐂",name:"葱香牛肉",desc:"葱油飘香，牛肉嫩滑",tag:""},{id:24,emoji:"🐂",name:"特色孜然牛肉",desc:"孜然飘香，风味十足",tag:"special"},
+{id:81,emoji:"🧅",name:"洋葱炒牛肉",desc:"洋葱甜香配嫩滑牛肉",tag:"new"},{id:86,emoji:"🐂",name:"双葱炒胸口油",desc:"双葱爆炒，牛胸口油脂香浓",tag:"special"},
+],
+"🐷 猪肉系列":[
+{id:15,emoji:"🥚",name:"肉饼蒸蛋",desc:"嫩滑蒸蛋，肉香四溢",tag:""},{id:16,emoji:"🍆",name:"肉末茄子",desc:"茄子入味，下饭神器",tag:""},{id:17,emoji:"🍄",name:"五花肉炒香菇",desc:"浓香五花配鲜香菇",tag:""},{id:19,emoji:"🐷",name:"特色锅包肉",desc:"外酥里嫩，酸甜可口",tag:"special"},{id:25,emoji:"🦴",name:"红烧排骨",desc:"色泽红亮，肉质酥烂",tag:""},{id:26,emoji:"🥓",name:"钱江肉丝（咸甜）",desc:"杭帮经典，咸甜交织",tag:""},{id:27,emoji:"🐷",name:"红烧猪蹄",desc:"软糯Q弹，满满胶原",tag:""},{id:28,emoji:"🐷",name:"可乐猪蹄",desc:"可乐炖出的甜蜜味道",tag:""},{id:29,emoji:"🧆",name:"特色瘦肉丸",desc:"手打肉丸，弹牙鲜美",tag:"special"},
+{id:103,emoji:"🥩",name:"糖醋里脊",desc:"酸甜可口，外酥里嫩",tag:"hot"},{id:104,emoji:"🥩",name:"红烧肉",desc:"肥而不腻，入口即化",tag:"fav"},
+],
+"🐑 羊肉系列":[
+{id:30,emoji:"🐑",name:"特色孜然羊肉",desc:"西北风味，孜然飘香",tag:"special"},{id:31,emoji:"🐑",name:"特色羊排",desc:"外焦里嫩，香气扑鼻",tag:"special"},{id:32,emoji:"🐑",name:"红烧羊排",desc:"浓郁酱香，软烂脱骨",tag:""},{id:87,emoji:"🐑",name:"香菜碎羊肉",desc:"香菜清香配鲜嫩羊肉",tag:"new"},
+],
+"🐔 鸡鸭禽类":[
+{id:33,emoji:"🍗",name:"特色大盘鸡",desc:"土豆宽面鸡肉一锅香",tag:"special"},{id:34,emoji:"🍗",name:"奥尔良鸡翅",desc:"烤翅香到舔手指",tag:""},{id:35,emoji:"🍗",name:"宫保鸡丁",desc:"花生鸡丁，麻辣鲜香",tag:""},
+{id:36,emoji:"🐔",name:"酸辣鸡胗",desc:"脆嫩爽口，酸辣开胃",tag:""},
+{id:37,emoji:"🍋",name:"泰式柠檬鸡肉",desc:"清新柠檬酸辣风味",tag:"new",options:[{label:"选鸡肉",key:"chicken",multi:false,choices:["鸡腿肉","鸡胸肉"],hasOther:false}]},
+{id:88,emoji:"🌶️",name:"辣子鸡",desc:"麻辣鲜香，外酥里嫩",tag:"hot"},
+{id:117,emoji:"🍛",name:"咖喱鸡",desc:"浓郁咖喱，鸡肉嫩滑",tag:""},
+{id:105,emoji:"🍗",name:"可乐鸡翅",desc:"甜香入味，外焦里嫩",tag:"fav"},
+{id:106,emoji:"🍗",name:"黄焖鸡",desc:"汁浓肉烂，下饭神器",tag:""},
+],
+"🐟 海鲜水产":[
+{id:107,emoji:"🐟",name:"红烧鱼",desc:"酱香浓郁，肉质鲜嫩",tag:"hot"},
+{id:39,emoji:"🍋",name:"泰式柠檬酸辣鱼",desc:"东南亚风味，酸辣鲜香",tag:"new"},{id:40,emoji:"🦐",name:"香菇包虾滑",desc:"Q弹虾滑配鲜香菇",tag:""},{id:41,emoji:"🦐",name:"蒜香开背虾",desc:"蒜香四溢，虾肉弹牙",tag:""},
+{id:108,emoji:"🦐",name:"油焖大虾",desc:"鲜香弹牙，入口即化",tag:""},
+{id:42,emoji:"🐙",name:"特色鱿鱼",desc:"鲜香弹牙，特色调味",tag:"special"},{id:43,emoji:"🐟",name:"香煎三文鱼",desc:"外酥内嫩，营养丰富",tag:""},{id:44,emoji:"🦪",name:"辣炒花甲",desc:"花甲鲜美，辣味十足",tag:""},{id:45,emoji:"🦀",name:"香辣青蟹",desc:"肥美青蟹，香辣入味",tag:""},{id:46,emoji:"🦀",name:"泰式酸辣螃蟹",desc:"酸辣鲜甜，异域风味",tag:"new"},{id:47,emoji:"🦞",name:"三葱爆龙虾",desc:"葱香浓郁，龙虾鲜甜",tag:"special"},{id:48,emoji:"🦪",name:"炒蛏子",desc:"鲜嫩蛏子，简单美味",tag:""},{id:49,emoji:"🦪",name:"蒸生蚝",desc:"蒜蓉粉丝，鲜到爆",tag:""},
+{id:79,emoji:"🦐",name:"蒜蓉粉丝虾",desc:"蒜蓉粉丝配鲜虾，鲜到爆",tag:"new"},{id:84,emoji:"🦐",name:"椒盐大虾",desc:"外酥里嫩，椒盐飘香",tag:"hot"},{id:85,emoji:"🍋",name:"柠檬酸辣虾",desc:"酸辣清新，虾肉弹牙",tag:"new"},
+{id:118,emoji:"🦐",name:"芥末虾球",desc:"芥末冲鼻，虾球Q弹",tag:"special"},
+],
+"🔥 麻辣香锅":[
+{id:18,emoji:"🔥",name:"麻辣香锅",desc:"无辣不欢，配菜自选",tag:"hot",options:[{label:"选配菜(可多选)",key:"toppings",multi:true,choices:["虾","鱼","牛肉","五花肉","青菜","包菜","金针菇"],hasOther:true}]},
+],
+"🥚 蛋类":[
+{id:50,emoji:"🍳",name:"煎蛋",desc:"金黄酥脆，简单美味",tag:""},{id:51,emoji:"🥚",name:"水煮蛋",desc:"营养满分的白煮蛋",tag:""},{id:52,emoji:"🥚",name:"卤蛋",desc:"仅红烧锅底可加",tag:""},{id:53,emoji:"🥚",name:"酸辣鸡蛋",desc:"酸辣开胃，蛋香浓郁",tag:""},{id:54,emoji:"🥚",name:"韭黄炒蛋",desc:"韭黄鲜嫩，蛋香四溢",tag:""},{id:55,emoji:"🍅",name:"西红柿炒鸡蛋",desc:"永远的经典，酸甜下饭",tag:""},
+{id:83,emoji:"🍳",name:"火腿炒蛋",desc:"火腿鲜香配嫩滑鸡蛋",tag:""},
+{id:109,emoji:"🍳",name:"番茄炒蛋",desc:"经典家常，酸甜开胃",tag:""},
+],
+"🥬 蔬菜·凉菜":[
+{id:56,emoji:"🥬",name:"清炒上海青",desc:"清爽嫩滑，简单好吃",tag:""},{id:57,emoji:"🍄",name:"香菇炒青菜",desc:"鲜香嫩滑，家常美味",tag:""},{id:58,emoji:"🥬",name:"蚝油生菜",desc:"蚝油鲜香，生菜脆嫩",tag:""},
+{id:59,emoji:"🥬",name:"白灼生菜",desc:"含秘制酱料！",tag:"secret"},{id:60,emoji:"🥬",name:"白灼白菜",desc:"含秘制酱料！",tag:"secret"},{id:61,emoji:"🍄",name:"白灼金针菇",desc:"含秘制酱料！",tag:"secret"},{id:62,emoji:"🥦",name:"白灼西兰花",desc:"含秘制酱料！",tag:"secret"},
+{id:63,emoji:"🥒",name:"拍黄瓜",desc:"清脆爽口，开胃凉菜",tag:""},{id:64,emoji:"🥔",name:"酸辣土豆丝",desc:"酸辣脆爽，下饭必备",tag:""},{id:80,emoji:"🥔",name:"凉拌土豆丝",desc:"爽脆开胃的凉菜",tag:""},{id:65,emoji:"🥬",name:"酸辣白菜",desc:"酸辣爽口，简单下饭",tag:""},{id:66,emoji:"🥬",name:"干锅包菜",desc:"干香微辣，越炒越香",tag:""},{id:67,emoji:"🍄",name:"黄油煎口蘑",desc:"黄油香气，口蘑鲜嫩",tag:"new"},{id:68,emoji:"🌽",name:"蒸玉米",desc:"甜糯可口，原汁原味",tag:""},{id:69,emoji:"🦐",name:"虾皮",desc:"补钙小能手",tag:""},
+{id:89,emoji:"🫒",name:"呛拌西葫芦丝",desc:"清爽脆嫩，开胃凉菜",tag:"new"},
+{id:110,emoji:"🥦",name:"蒜蓉西兰花",desc:"清淡爽口，营养满分",tag:""},{id:111,emoji:"🫑",name:"青椒肉丝",desc:"鲜辣下饭，超级下饭",tag:""},{id:112,emoji:"🍆",name:"鱼香茄子",desc:"酱香浓厚，茄子入味",tag:"hot"},{id:113,emoji:"🥬",name:"醋溜白菜",desc:"酸辣脆爽，简单美味",tag:""},{id:114,emoji:"🫘",name:"干煸四季豆",desc:"干香麻辣，越嚼越香",tag:""},
+],
+"🍲 汤品":[
+{id:70,emoji:"🌽",name:"玉米排骨汤",desc:"奶白鲜甜，营养丰富",tag:""},{id:71,emoji:"🐂",name:"牛尾汤",desc:"醇厚鲜美，滋补暖身",tag:"special"},{id:72,emoji:"🥣",name:"紫菜蛋花汤",desc:"鲜香清淡，暖胃舒心",tag:""},{id:78,emoji:"🐟",name:"鱼丸汤",desc:"Q弹鱼丸，清鲜暖胃",tag:"new"},
+],
+"🍵 茶饮":[
+{id:90,emoji:"🍵",name:"人参茶",desc:"滋补养生，温暖身心",tag:"special"},
+{id:115,emoji:"🥤",name:"酸梅汤",desc:"冰镇酸甜，解腻神器",tag:""},{id:116,emoji:"🍵",name:"红枣枸杞茶",desc:"养生暖身，甜丝丝的",tag:""},
+],
+"🍰 甜品":[
+{id:73,emoji:"🟣",name:"芋泥麻薯",desc:"软糯香甜，幸福满满",tag:""},{id:74,emoji:"🥧",name:"美味蛋挞",desc:"酥脆外壳，奶香内馅",tag:""},
+{id:75,emoji:"📝",name:"备注其他甜品",desc:"想吃什么甜品告诉大厨",tag:"",options:[{label:"想吃什么甜品",key:"note",multi:false,choices:[],hasOther:true,onlyOther:true}]},
+],
+};
+
+let cart={},activeCategory=0,currentOptItem=null,currentOptSelections={},suggestions=[],searchQuery='',cartKeyCounter=0,currentPanel=null;
+const categoryNames=Object.keys(MENU);
+
+function renderCategories(){document.getElementById('categories').innerHTML=categoryNames.map((n,i)=>`<button class="cat-tab ${i===activeCategory?'active':''}" onclick="switchCategory(${i})">${n}</button>`).join('');}
+function switchCategory(i){activeCategory=i;searchQuery='';document.getElementById('searchInput').value='';renderCategories();renderMenu();document.querySelectorAll('.cat-tab')[i]?.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'});}
+function onSearch(v){searchQuery=v.trim().toLowerCase();renderMenu();}
+function getFilteredItems(){if(!searchQuery)return[{cat:categoryNames[activeCategory],items:MENU[categoryNames[activeCategory]]}];const r=[];for(const c of categoryNames){const f=MENU[c].filter(i=>i.name.toLowerCase().includes(searchQuery)||i.desc.toLowerCase().includes(searchQuery));if(f.length)r.push({cat:c,items:f});}return r;}
+function renderMenu(){const s=document.getElementById('menuSection'),g=getFilteredItems();if(!g.length){s.innerHTML=`<div class="empty-state"><div class="emoji">🤔</div>没找到"${searchQuery}"</div>`;return;}let h='',idx=0;for(const gr of g){h+=`<div class="section-title">${gr.cat}</div>`;for(const item of gr.items)h+=menuItemHTML(item,idx++);}s.innerHTML=h;}
+function menuItemHTML(item,idx){const qty=getItemTotalQty(item.id),hasOpt=item.options?.length>0;const tagMap={hot:'<span class="item-tag tag-hot">🔥 招牌</span>',new:'<span class="item-tag tag-new">✨ 新品</span>',special:'<span class="item-tag tag-special">⭐ 特色</span>',secret:'<span class="item-tag tag-secret">🤫 秘制</span>',fav:'<span class="item-tag tag-fav">💕 最爱</span>'};return`<div class="menu-item" style="animation-delay:${idx*0.02}s"><div class="item-img">${item.emoji}</div><div class="item-info"><div class="item-name">${item.name} ${tagMap[item.tag]||''}</div><div class="item-desc">${item.desc}${hasOpt?' <span class="has-options">📋可选配</span>':''}</div><div class="item-bottom"><div class="item-price"><span class="free">老大免费</span><span class="others">其他人¥1,000,000</span></div><div class="qty-control">${qty>0?`<button class="qty-btn qty-minus" onclick="removeItem(${item.id})">−</button><span class="qty-num">${qty}</span>`:''}<button class="qty-btn qty-plus" onclick="addItem(${item.id})">+</button></div></div></div></div>`;}
+function findItem(id){for(const items of Object.values(MENU)){const f=items.find(i=>i.id===id);if(f)return f;}return null;}
+function getItemTotalQty(id){let t=0;for(const v of Object.values(cart))if(v.itemId===id)t+=v.qty;return t;}
+function addItem(id){const item=findItem(id);if(!item)return;if(item.options?.length>0){openOptions(item);return;}const ex=Object.entries(cart).find(([k,v])=>v.itemId===id&&!v.optionsStr);if(ex)cart[ex[0]].qty++;else cart['ck_'+(++cartKeyCounter)]={itemId:id,qty:1,options:{},optionsStr:''};renderMenu();updateCartBar();}
+function removeItem(id){const entries=Object.entries(cart).filter(([k,v])=>v.itemId===id);if(entries.length){const last=entries[entries.length-1];last[1].qty--;if(last[1].qty<=0)delete cart[last[0]];renderMenu();updateCartBar();}}
+function updateCartBar(){const bar=document.getElementById('cartBar'),badge=document.getElementById('cartBadge'),total=document.getElementById('cartTotal'),count=document.getElementById('cartCount');let n=0;for(const v of Object.values(cart))n+=v.qty;if(n===0){bar.classList.add('cart-empty');badge.style.display='none';total.textContent='老大免费';count.textContent='还没选呢～';}else{bar.classList.remove('cart-empty');badge.style.display='flex';badge.textContent=n;total.textContent='老大免费！';count.textContent=`共 ${n} 道菜`;}}
+function openPanel(type){closePanel();currentPanel=type;document.getElementById('panelOverlay').classList.add('open');const m={cart:'cartPanel',suggest:'sugPanel',remark:'remarkPanel'};document.getElementById(m[type]).classList.add('open');if(type==='cart')renderCart();if(type==='suggest')renderSuggestList();}
+function closePanel(){document.getElementById('panelOverlay').classList.remove('open');document.getElementById('optOverlay').classList.remove('open');['cartPanel','optPanel','sugPanel','remarkPanel'].forEach(id=>document.getElementById(id).classList.remove('open'));currentPanel=null;currentOptItem=null;}
+function closeOptOnly(){document.getElementById('optOverlay').classList.remove('open');document.getElementById('optPanel').classList.remove('open');if(currentPanel===null){document.getElementById('panelOverlay').classList.remove('open');}currentOptItem=null;}
+function openOptions(item){currentOptItem=item;currentOptSelections={};item.options.forEach(o=>{currentOptSelections[o.key]=o.multi?[]:'';currentOptSelections[o.key+'_other']='';});document.getElementById('optTitle').textContent=item.emoji+' '+item.name+' — 自选';renderOptionsBody();if(currentPanel==='cart')document.getElementById('optOverlay').classList.add('open');else document.getElementById('panelOverlay').classList.add('open');document.getElementById('optPanel').classList.add('open');}
+function renderOptionsBody(){let h='';currentOptItem.options.forEach(o=>{h+=`<div class="opt-group"><div class="opt-label">${o.label}</div>`;if(!o.onlyOther){h+='<div class="opt-chips">';o.choices.forEach(c=>{const sel=o.multi?currentOptSelections[o.key].includes(c):currentOptSelections[o.key]===c;h+=`<button class="opt-chip ${sel?'selected':''}" onclick="toggleOpt('${o.key}',\`${c}\`,${o.multi})">${c}</button>`;});h+='</div>';}if(o.hasOther||o.onlyOther)h+=`<textarea class="opt-remark" placeholder="${o.onlyOther?'写下你想吃的...':'其他（文字备注）'}" oninput="currentOptSelections['${o.key}_other']=this.value">${currentOptSelections[o.key+'_other']||''}</textarea>`;h+='</div>';});document.getElementById('optBody').innerHTML=h;}
+function toggleOpt(key,val,multi){if(multi){const a=currentOptSelections[key],i=a.indexOf(val);if(i>=0)a.splice(i,1);else a.push(val);}else currentOptSelections[key]=currentOptSelections[key]===val?'':val;renderOptionsBody();}
+function confirmOptions(){const item=currentOptItem;let parts=[],opts={};item.options.forEach(o=>{let vals=[];if(o.multi)vals=[...currentOptSelections[o.key]];else if(currentOptSelections[o.key])vals=[currentOptSelections[o.key]];const other=currentOptSelections[o.key+'_other']?.trim();if(other)vals.push(other);if(vals.length){parts.push(o.label.replace(/\(.*?\)/g,'').trim()+'：'+vals.join('、'));opts[o.key]=vals;}});const optionsStr=parts.join(' | ');const ex=Object.entries(cart).find(([k,v])=>v.itemId===item.id&&v.optionsStr===optionsStr);if(ex)cart[ex[0]].qty++;else cart['ck_'+(++cartKeyCounter)]={itemId:item.id,qty:1,options:opts,optionsStr};document.getElementById('optOverlay').classList.remove('open');document.getElementById('optPanel').classList.remove('open');if(currentPanel!=='cart'){document.getElementById('panelOverlay').classList.remove('open');currentPanel=null;}else renderCart();currentOptItem=null;renderMenu();updateCartBar();}
+function renderCart(){const list=document.getElementById('cartList'),entries=Object.entries(cart);if(!entries.length){list.innerHTML='<div style="text-align:center;padding:40px;color:var(--text-muted);">还没选菜呢～</div>';return;}let h='';for(const[key,val]of entries){const item=findItem(val.itemId);if(!item)continue;h+=`<div class="drawer-item"><div class="drawer-item-emoji">${item.emoji}</div><div class="drawer-item-info"><div class="drawer-item-name">${item.name}</div>${val.optionsStr?`<div class="drawer-item-opts">${val.optionsStr}</div>`:''}<div class="drawer-item-price">老大免费 × ${val.qty}</div></div><div class="qty-control"><button class="qty-btn qty-minus" onclick="cartQty('${key}',-1)">−</button><span class="qty-num">${val.qty}</span><button class="qty-btn qty-plus" onclick="cartQty('${key}',1)">+</button></div></div>`;}list.innerHTML=h;}
+function cartQty(key,delta){if(!cart[key])return;cart[key].qty+=delta;if(cart[key].qty<=0)delete cart[key];renderMenu();updateCartBar();if(!Object.keys(cart).length)closePanel();else renderCart();}
+function clearCart(){cart={};cartKeyCounter=0;renderMenu();updateCartBar();closePanel();}
+
+// ============================== SUBMIT (Screenshot mode) ==============================
+function submitOrder(){
+  const entries=Object.entries(cart);if(!entries.length)return;
+  const now=new Date();
+  const timeStr=`${now.getMonth()+1}月${now.getDate()}日 ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+  let totalItems=0;
+  let itemsHtml='';
+  for(const[key,val]of entries){
+    const item=findItem(val.itemId);if(!item)continue;
+    totalItems+=val.qty;
+    itemsHtml+=`<div class="order-item-line">${item.emoji} ${item.name} ×${val.qty}</div>`;
+    if(val.optionsStr)itemsHtml+=`<div class="order-item-opt">└ ${val.optionsStr}</div>`;
+  }
+  const card=document.getElementById('orderCard');
+  card.innerHTML=`
+    <div class="order-emoji">🎉</div>
+    <div class="order-title">胡老大的点菜单</div>
+    <div class="order-time">⏰ ${timeStr}</div>
+    <div class="order-items">${itemsHtml}</div>
+    <div class="order-total">共 ${totalItems} 道菜 · 老大免费！</div>
+    <div class="order-tip">📸 <b>截图这个页面发给大厨</b>，大厨看到就开始做啦！</div>
+    <button class="order-close-btn" onclick="closeOrder()">好嘞！截完图了 😋</button>
+  `;
+  closePanel();
+  document.getElementById('orderOverlay').classList.add('open');
+  cart={};cartKeyCounter=0;renderMenu();updateCartBar();
+}
+function closeOrder(){document.getElementById('orderOverlay').classList.remove('open');}
+
+// ============================== REMARK ==============================
+function submitRemark(){
+  const text=document.getElementById('remarkText').value.trim();if(!text){showNotif('⚠️ 请先写点备注～');return;}
+  showNotif('✅ 备注已记录！记得截图发给大厨～');
+  document.getElementById('remarkText').value='';closePanel();
+}
+
+// ============================== SUGGESTIONS ==============================
+function renderSuggestList(){const list=document.getElementById('sugList');if(!suggestions.length){list.innerHTML='<div style="text-align:center;padding:30px;color:var(--text-muted);font-size:13px;">还没有意见～快来第一个提交吧！</div>';return;}list.innerHTML=suggestions.map((s,i)=>`<div class="suggest-item"><div><div class="suggest-item-name">💬 ${s.text}</div><div class="suggest-item-time">${s.time}</div></div><button style="background:none;border:none;font-size:16px;cursor:pointer;color:var(--text-muted);" onclick="removeSuggestion(${i})">✕</button></div>`).join('');}
+function addSuggestion(){const input=document.getElementById('sugInput'),text=input.value.trim();if(!text)return;const now=new Date(),time=`${now.getMonth()+1}月${now.getDate()}日 ${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`;suggestions.unshift({text,time});input.value='';renderSuggestList();}
+function removeSuggestion(i){suggestions.splice(i,1);renderSuggestList();}
+function showNotif(msg){const b=document.getElementById('notifBanner');b.textContent=msg;b.classList.add('show');setTimeout(()=>b.classList.remove('show'),2500);}
+
+renderCategories();renderMenu();updateCartBar();
+</script>
+</body>
+</html>
